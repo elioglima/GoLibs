@@ -11,3 +11,7 @@ func SoNumeros(doc string) (string, error) {
 	}
 	return reg.ReplaceAllString(doc, ""), nil
 }
+
+func Asp(str string) string {
+	return "'" + str + "'"
+}
