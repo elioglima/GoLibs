@@ -1,4 +1,4 @@
-package libs
+package GoLibs
 
 func In(value int, i ...int) bool {
 	for _, index := range i {

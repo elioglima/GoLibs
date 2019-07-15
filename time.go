@@ -1,4 +1,4 @@
-package libs
+package GoLibs
 
 import (
 	"fmt"
@@ -91,6 +91,8 @@ func FormatDateTime(formato string, t time.Time) string {
 		valor_out = fmt.Sprint("%d/%d/%d", t.Day(), int(t.Month()), t.Year())
 	case "dd/mm/yyyy hh:nn:ss":
 		valor_out = fmt.Sprintf("%d/%d/%d %d:%d:%d", t.Day(), int(t.Month()), t.Year(), t.Hour(), t.Second(), t.Nanosecond())
+	case "yyyy-mm-dd hh:nn:ss":
+		valor_out = fmt.Sprintf("%d-%d-%d %d:%d:%d", t.Year(), int(t.Month()), t.Day(), t.Hour(), t.Minute(), t.Second())
 	}
 	return valor_out
 }
