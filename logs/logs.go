@@ -28,23 +28,28 @@ func print(CorSel color.Attribute, a ...interface{}) error {
 		fmt.Printf(" %v ", valor)
 	}
 
-	_, file, line, _ := runtime.Caller(2)
+	if DebugOrigem {
+		_, file, line, _ := runtime.Caller(2)
 
-	fpcs := make([]uintptr, 1)
-	// Skip 2 levels to get the caller
-	nfpcs := runtime.Callers(3, fpcs)
-	if nfpcs == 0 {
-		fmt.Println("MSG: NO CALLER")
+		fpcs := make([]uintptr, 1)
+		// Skip 2 levels to get the caller
+		nfpcs := runtime.Callers(3, fpcs)
+		if nfpcs == 0 {
+			fmt.Println("MSG: NO CALLER")
+		}
+
+		caller := runtime.FuncForPC(fpcs[0] - 1)
+		if caller == nil {
+			fmt.Println("MSG CALLER WAS NIL")
+		}
+
+		ANF := strings.Split(caller.Name(), ".")
+		color.Set(color.FgWhite)
+		fmt.Printf("\nFunc: %v(), Ln: %v, File: %v\n", ANF[len(ANF)-1], line, file)
+	} else {
+		fmt.Printf("\n")
+
 	}
-
-	caller := runtime.FuncForPC(fpcs[0] - 1)
-	if caller == nil {
-		fmt.Println("MSG CALLER WAS NIL")
-	}
-
-	ANF := strings.Split(caller.Name(), ".")
-	color.Set(color.FgWhite)
-	fmt.Printf("\nFunc: %v(), Ln: %v, File: %v\n", ANF[len(ANF)-1], line, file)
 
 	return nil
 }

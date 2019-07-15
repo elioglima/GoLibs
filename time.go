@@ -86,13 +86,21 @@ func GetHora(d time.Time) string {
 
 func FormatDateTime(formato string, t time.Time) string {
 	var valor_out string
+
+	dia := t.Day()
+	mes := int(t.Month())
+	ano := t.Year()
+	hora := t.Hour()
+	min := t.Minute()
+	seg := t.Second()
+
 	switch strings.ToLower(strings.TrimSpace(formato)) {
 	case "dd/mm/yyyy":
-		valor_out = fmt.Sprint("%d/%d/%d", t.Day(), int(t.Month()), t.Year())
+		valor_out = fmt.Sprintf("%d/%d/%d", dia, mes, ano)
 	case "dd/mm/yyyy hh:nn:ss":
-		valor_out = fmt.Sprintf("%d/%d/%d %d:%d:%d", t.Day(), int(t.Month()), t.Year(), t.Hour(), t.Second(), t.Nanosecond())
+		valor_out = fmt.Sprintf("%d/%d/%d %d:%d:%d", dia, mes, ano, hora, seg, min)
 	case "yyyy-mm-dd hh:nn:ss":
-		valor_out = fmt.Sprintf("%d-%d-%d %d:%d:%d", t.Year(), int(t.Month()), t.Day(), t.Hour(), t.Minute(), t.Second())
+		valor_out = fmt.Sprintf("%d-%d-%d %d:%d:%d", ano, mes, dia, hora, seg, min)
 	}
 	return valor_out
 }
