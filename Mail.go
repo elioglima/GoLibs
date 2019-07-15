@@ -33,7 +33,7 @@ func SendSMTPMail(p SendSMTPMailST) {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
 
-	message += "\r\n" + p.Body
+	// message += "\r\n" + p.Body
 
 	message += "Content-Type: text/html; charset=\"utf-8\"\r\n"
 	message += "Content-Transfer-Encoding: 7bit\r\n"
