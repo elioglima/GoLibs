@@ -1,6 +1,7 @@
 package GoLibs
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -87,12 +88,40 @@ func GetHora(d time.Time) string {
 func FormatDateTime(formato string, t time.Time) string {
 	var valor_out string
 
+	var sdia, smes, shora, smin, sseg string
+
 	dia := t.Day()
 	mes := int(t.Month())
 	ano := t.Year()
 	hora := t.Hour()
 	min := t.Minute()
 	seg := t.Second()
+
+	sdia = strconv.Itoa(dia)
+	smes = strconv.Itoa(mes)
+	shora = strconv.Itoa(hora)
+	smin = strconv.Itoa(min)
+	sseg = strconv.Itoa(seg)
+
+	if dia < 10 {
+		sdia = "0" + strconv.Itoa(dia)
+	}
+
+	if mes < 10 {
+		smes = "0" + strconv.Itoa(mes)
+	}
+
+	if hora < 10 {
+		shora = "0" + strconv.Itoa(hora)
+	}
+
+	if min < 10 {
+		smin = "0" + strconv.Itoa(min)
+	}
+
+	if seg < 10 {
+		sseg = "0" + strconv.Itoa(seg)
+	}
 
 	switch strings.ToLower(strings.TrimSpace(formato)) {
 	case "dd/mm/yyyy":
@@ -101,6 +130,8 @@ func FormatDateTime(formato string, t time.Time) string {
 		valor_out = fmt.Sprintf("%d/%d/%d %d:%d:%d", dia, mes, ano, hora, seg, min)
 	case "yyyy-mm-dd hh:nn:ss":
 		valor_out = fmt.Sprintf("%d-%d-%d %d:%d:%d", ano, mes, dia, hora, seg, min)
+	case "yyyy-mm-ddthh:nn:ss.000z":
+		valor_out = fmt.Sprintf("%d-%v-%vT%v:%v:%v.000Z", ano, smes, sdia, shora, sseg, smin)
 	}
 	return valor_out
 }
@@ -139,4 +170,28 @@ func TimeToDecStr(t time.Time) (sd, sm, sy, sh, sn, ss string) {
 	}
 
 	return sd, sm, sy, sh, sn, ss
+}
+
+func CheckTime(value_in string) (time.Time, error) {
+
+	val := value_in
+
+	if len(strings.TrimSpace(val)) == 0 {
+		return time.Now(), errors.New("Data inválida")
+	} else if !strings.Contains(val, "-") {
+		return time.Now(), errors.New("Data inválida")
+	} else if !strings.Contains(val, " ") {
+		return time.Now(), errors.New("Data inválida")
+	}
+
+	layout := "2006-01-02T15:04:05.000Z"
+	str := strings.Replace(val, " ", "T", -1) + ".000Z"
+
+	DateTime, err := time.Parse(layout, str)
+
+	if err != nil {
+		return time.Now(), err
+	}
+
+	return DateTime, nil
 }
