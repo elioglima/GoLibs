@@ -3,7 +3,6 @@ package GoLibs
 import (
 	"crypto/tls"
 	"fmt"
-	"log"
 	"net"
 	"net/mail"
 	"net/smtp"
@@ -19,7 +18,7 @@ type SendSMTPMailST struct {
 	SMTP_Senha  string
 }
 
-func SendSMTPMail(p SendSMTPMailST) {
+func SendSMTPMail(p SendSMTPMailST) (code int, message string, err error) {
 
 	// Setup headers
 	headers := make(map[string]string)
@@ -28,16 +27,16 @@ func SendSMTPMail(p SendSMTPMailST) {
 	headers["Subject"] = p.Subj
 
 	// Setup message
-	message := ""
+	msg := ""
 	for k, v := range headers {
-		message += fmt.Sprintf("%s: %s\r\n", k, v)
+		msg += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
 
 	// message += "\r\n" + p.Body
 
-	message += "Content-Type: text/html; charset=\"utf-8\"\r\n"
-	message += "Content-Transfer-Encoding: 7bit\r\n"
-	message += fmt.Sprintf("\r\n%s", p.Body+"\r\n")
+	msg += "Content-Type: text/html; charset=\"utf-8\"\r\n"
+	msg += "Content-Transfer-Encoding: 7bit\r\n"
+	msg += fmt.Sprintf("\r\n%s", p.Body+"\r\n")
 
 	// Connect to the SMTP Server
 	// servername := "smtp.perfectvision.kinghost.net:587"
@@ -53,41 +52,39 @@ func SendSMTPMail(p SendSMTPMailST) {
 
 	c, err := smtp.Dial(p.SMTP_Server)
 	if err != nil {
-		log.Panic(err)
+		return 0, "", err
 	}
 
 	c.StartTLS(tlsconfig)
 
 	// Auth
 	if err = c.Auth(auth); err != nil {
-		log.Panic(err)
+		return 0, "", err
 	}
 
 	// To && From
 	if err = c.Mail(p.From.Address); err != nil {
-		log.Panic(err)
+		return 0, "", err
 	}
 
 	if err = c.Rcpt(p.To.Address); err != nil {
-		log.Panic(err)
+		return 0, "", err
 	}
 
+	defer c.Quit()
 	// Data
 	w, err := c.Data()
 	if err != nil {
-		log.Panic(err)
+		return 0, "", err
 	}
+	defer w.Close()
 
-	_, err = w.Write([]byte(message))
+	_, err = w.Write([]byte(msg))
 	if err != nil {
-		log.Panic(err)
+		return 0, "", err
 	}
 
-	err = w.Close()
-	if err != nil {
-		log.Panic(err)
-	}
-
-	c.Quit()
+	code, message, err = c.Text.ReadResponse(0)
+	return
 
 }
