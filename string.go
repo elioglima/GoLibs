@@ -1,7 +1,9 @@
 package GoLibs
 
 import (
+	"errors"
 	"regexp"
+	"unicode"
 )
 
 func SoNumeros(doc string) (string, error) {
@@ -14,4 +16,22 @@ func SoNumeros(doc string) (string, error) {
 
 func Asp(str string) string {
 	return "'" + str + "'"
+}
+
+func StrJustNumber(s string) error {
+	for _, c := range s {
+		if !unicode.IsDigit(c) {
+			return errors.New("A string " + s + " contem números.")
+		}
+	}
+	return nil
+}
+
+func StrJustCharacter(s string) error {
+	for _, c := range s {
+		if !unicode.IsDigit(c) {
+			return errors.New("A string " + s + " contém caracteres.")
+		}
+	}
+	return nil
 }
