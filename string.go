@@ -3,6 +3,7 @@ package GoLibs
 import (
 	"errors"
 	"regexp"
+	"strings"
 	"unicode"
 )
 
@@ -34,4 +35,20 @@ func StrJustCharacter(s string) error {
 		}
 	}
 	return nil
+}
+
+func FormatLeft(v string, tm int, caracter string) (string, error) {
+	var (
+		sTemp string
+	)
+
+	sTemp = strings.TrimSpace(v)
+	if len(strings.TrimSpace(caracter)) == 0 {
+		caracter = " "
+	}
+
+	for i := 0; i < (tm - len(sTemp)); i++ {
+		sTemp = caracter + sTemp
+	}
+	return sTemp, nil
 }

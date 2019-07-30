@@ -195,3 +195,18 @@ func CheckTime(value_in string) (time.Time, error) {
 
 	return DateTime, nil
 }
+
+func NowToDecimal() string {
+	sd, sm, sy, sh, sn, ss := TimeToDecStr(time.Now())
+	return sy + sm + sd + sh + sn + ss
+}
+
+func StrParseTime(TimeStr string) (time.Time, error) {
+	layout := "2006-01-02T15:04:05.000Z"
+	t, err := time.Parse(layout, TimeStr)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return t, nil
+}
