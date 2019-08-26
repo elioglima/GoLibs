@@ -132,6 +132,8 @@ func FormatDateTime(formato string, t time.Time) string {
 		valor_out = fmt.Sprintf("%d-%d-%d %d:%d:%d", ano, mes, dia, hora, seg, min)
 	case "yyyy-mm-ddthh:nn:ss.000z":
 		valor_out = fmt.Sprintf("%d-%v-%vT%v:%v:%v.000Z", ano, smes, sdia, shora, sseg, smin)
+	case "justnumber":
+		valor_out = fmt.Sprintf("%d%v%v%v%v%v000", ano, smes, sdia, shora, sseg, smin)
 	}
 	return valor_out
 }

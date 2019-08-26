@@ -7,6 +7,14 @@ import (
 	"unicode"
 )
 
+func JustNumber(s string) string {
+	reg, err := regexp.Compile("[^0-9]+")
+	if err != nil {
+		return ""
+	}
+	return reg.ReplaceAllString(s, "")
+}
+
 func SoNumeros(doc string) (string, error) {
 	reg, err := regexp.Compile("[^0-9]+")
 	if err != nil {
@@ -47,8 +55,24 @@ func FormatLeft(v string, tm int, caracter string) (string, error) {
 		caracter = " "
 	}
 
-	for i := 0; i < (tm - len(sTemp)); i++ {
+	for i := len(sTemp); i < tm; i++ {
 		sTemp = caracter + sTemp
+	}
+	return sTemp, nil
+}
+
+func FormatRigth(v string, tm int, caracter string) (string, error) {
+	var (
+		sTemp string
+	)
+
+	sTemp = strings.TrimSpace(v)
+	if len(strings.TrimSpace(caracter)) == 0 {
+		caracter = " "
+	}
+
+	for i := len(sTemp); i < tm; i++ {
+		sTemp += caracter
 	}
 	return sTemp, nil
 }
